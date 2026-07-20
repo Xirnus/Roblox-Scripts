@@ -2,7 +2,20 @@
 
 #Include navigation.ahk
 
+; --- DIRECTORIES ---
+IniFile     := A_ScriptDir . "\settings.ini"
+ImageFolder := A_ScriptDir . "\img"
 
+if !DirExist(ImageFolder)
+    DirCreate(ImageFolder)
+
+; Global storage for Unit Placement references
+guiControls := Map()
+unitPlacementGui := ""
+
+; ==============================================================================
+; MAIN GUI (PARENT)
+; ==============================================================================
 if !IsSet(MyGui) {
     MyGui := Gui("+AlwaysOnTop")
     MyGui.Title := "Omsim Macro"
@@ -10,19 +23,23 @@ if !IsSet(MyGui) {
 
     ; --- LEFT COLUMN ---
     MyGui.Add("Text", "x15 y15 w150 Center", "Select Game Mode:")
-    modeDDL := MyGui.Add("DropDownList", "x15 y+5 w150 vMode Choose1", ["Gem Farm", "Story", "Raid", "Challenge", "Expedition"])
+    modeDDL := MyGui.Add("DropDownList", "x15 y+5 w150 vMode Choose1", ["Story", "Raid", "Challenge", "Expedition"])
     
     ; Event Listener: Fires whenever 'vMode' changes selection
     modeDDL.OnEvent("Change", UpdateGuiVisibility)
 
     ; Sleep Input (Positioned right below Game Mode selection)
-    MyGui.Add("Text", "x15 y+25 w75", "Sleep (ms):")
+    MyGui.Add("Text", "x15 y+20 w75", "Sleep (ms):")
     MyGui.Add("Edit", "x+2 yp-3 w73 vSleepMs", "1000")
     
     ; Helper text
     MyGui.SetFont("s8 cGray")
-    MyGui.Add("Text", "x15 y+5 w150", "1sec = 1000")
+    MyGui.Add("Text", "x15 y+2 w150", "1sec = 1000")
     MyGui.SetFont("s10 cDefault")
+
+    ; --- UNIT PLACEMENT BUTTON ---
+    btnUnitPlacement := MyGui.Add("Button", "x15 y145 w150 h32", "Unit Placement")
+    btnUnitPlacement.OnEvent("Click", (*) => OpenUnitPlacementGUI())
 
     ; --- RIGHT COLUMN (Positioned at x185 y15) ---
     ; Expedition Controls
@@ -48,13 +65,278 @@ if !IsSet(MyGui) {
     txtChall2 := MyGui.Add("Text", "x185 y+2 w150 Center", "(Auto Start OFF)")
 
     ; --- BOTTOM SECTION ---
-    MyGui.Add("Text", "x15 y195 w320 vWinText Center", "F9: Start | ESC: Stop")
+    MyGui.Add("Text", "x15 y200 w320 vWinText Center", "F9: Start | ESC: Stop")
 
     ; Initial hide/show call on startup
     UpdateGuiVisibility()
 }
 
-; Function to dynamically toggle visibility based on selected Mode
+
+; ==============================================================================
+; UNIT PLACEMENT GUI (CHILD WINDOW)
+; ==============================================================================
+OpenUnitPlacementGUI() {
+    global unitPlacementGui, guiControls
+
+    ; Bring existing window to front if already open
+    if (unitPlacementGui && WinExist("ahk_id " . unitPlacementGui.Hwnd)) {
+        unitPlacementGui.Show()
+        return
+    }
+
+    unitPlacementGui := Gui("+Owner" MyGui.Hwnd " +AlwaysOnTop", "Unit placements")
+
+    ; Title
+    unitPlacementGui.SetFont("s20 bold", "Segoe UI")
+    unitPlacementGui.AddText("x350 y15 w300 Center", "Unit placements")
+
+    ; Save Button
+    unitPlacementGui.SetFont("s10 norm", "Segoe UI")
+    btnSave := unitPlacementGui.AddButton("x840 y15 w120 h32", "Save")
+    btnSave.OnEvent("Click", (*) => SaveAllData())
+
+    ; --- LEFT SECTION: 4 SLOT BOXES ---
+    numSlots   := 4
+    slotWidth  := 180
+    slotHeight := 280
+    startX     := 20
+    startY     := 65
+    gap        := 15
+
+    Loop numSlots {
+        currentX := startX + (A_Index - 1) * (slotWidth + gap)
+        slotKey  := "Slot" A_Index
+        
+        unitPlacementGui.SetFont("s12 bold", "Segoe UI")
+        unitPlacementGui.AddGroupBox("x" currentX " y" startY " w" slotWidth " h" slotHeight, "Slot " A_Index)
+        
+        contentX := currentX + 12
+        fieldW   := slotWidth - 24
+        
+        ; 1. Unit Name
+        unitPlacementGui.SetFont("s9 bold", "Segoe UI")
+        unitPlacementGui.AddText("x" contentX " y" startY + 30, "Unit " A_Index " name:")
+        unitPlacementGui.SetFont("s9 norm", "Segoe UI")
+        savedName := IniRead(IniFile, slotKey, "Name", "")
+        guiControls[slotKey . "_Name"] := unitPlacementGui.AddEdit("x" contentX " y" startY + 50 " w" fieldW, savedName)
+        
+        ; 2. Placements
+        unitPlacementGui.SetFont("s9 bold", "Segoe UI")
+        unitPlacementGui.AddText("x" contentX " y" startY + 85, "Placements:")
+        unitPlacementGui.SetFont("s9 norm", "Segoe UI")
+        savedPlace := IniRead(IniFile, slotKey, "Placements", "1")
+        ddlPlace := unitPlacementGui.AddDDL("x" contentX " y" startY + 105 " w" fieldW, ["1", "2", "3"])
+        ddlPlace.Text := savedPlace
+        guiControls[slotKey . "_Placements"] := ddlPlace
+        
+        ; 3. Coordinate Button
+        unitPlacementGui.SetFont("s9 norm", "Segoe UI")
+        btnCoord := unitPlacementGui.AddButton("x" contentX " y" startY + 220 " w" fieldW " h30", "Coordinate")
+        btnCoord.OnEvent("Click", OpenCoordPopup.Bind("Slot " A_Index, slotKey))
+    }
+
+    ; --- RIGHT SECTION: SIDE PANEL ---
+    rightX := startX + 4 * (slotWidth + gap) + 10
+
+    ; Senku Box & Button
+    unitPlacementGui.SetFont("s11 bold", "Segoe UI")
+    unitPlacementGui.AddGroupBox("x" rightX " y" startY + 160 " w220 h60", "Senku")
+    unitPlacementGui.SetFont("s9 norm", "Segoe UI")
+    btnSenku := unitPlacementGui.AddButton("x" (rightX + 15) " y" startY + 180 " w190 h30", "Coordinate")
+    btnSenku.OnEvent("Click", OpenCoordPopup.Bind("Senku", "Senku"))
+
+    ; Ramen Box & Button
+    unitPlacementGui.SetFont("s11 bold", "Segoe UI")
+    unitPlacementGui.AddGroupBox("x" rightX " y" startY + 230 " w220 h60", "Ramen")
+    unitPlacementGui.SetFont("s9 norm", "Segoe UI")
+    btnRamen := unitPlacementGui.AddButton("x" (rightX + 15) " y" startY + 250 " w190 h30", "Coordinate")
+    btnRamen.OnEvent("Click", OpenCoordPopup.Bind("Ramen", "Ramen"))
+
+    unitPlacementGui.Show("w1040 h370")
+}
+
+
+; ==============================================================================
+; SAVE FUNCTIONALITY
+; ==============================================================================
+SaveAllData() {
+    Loop 4 {
+        key := "Slot" A_Index
+        IniWrite(guiControls[key . "_Name"].Value, IniFile, key, "Name")
+        IniWrite(guiControls[key . "_Placements"].Text, IniFile, key, "Placements")
+    }
+    
+    MsgBox("All settings saved to settings.ini!", "Saved", "4096")
+}
+
+
+; ==============================================================================
+; COORDINATE POPUP WINDOW FUNCTION
+; ==============================================================================
+OpenCoordPopup(slotTitle, iniSection, *) {
+    popup := Gui("+Owner" unitPlacementGui.Hwnd " +AlwaysOnTop", "Coordinate")
+    
+    popup.SetFont("s20 bold", "Segoe UI")
+    popup.AddText("x20 y20 w400", slotTitle " Coordinate")
+    
+    popup.SetFont("s10 norm", "Segoe UI")
+    savedMap := IniRead(IniFile, iniSection, "Map", "School Grounds")
+    
+    mapDDL := popup.AddDDL("x600 y65 w180", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "Spirit1", "Spirit2", "Spirit3"])
+
+    try {
+        mapDDL.Text := savedMap
+    } catch {
+        mapDDL.Choose(1)
+    }
+    
+    editsMap := Map()
+    
+    popupSave := popup.AddButton("x600 y20 w180 h35", "Save")
+    popupSave.OnEvent("Click", (*) => SaveCoords(popup, iniSection, mapDDL, editsMap))
+    
+    unitWidth := 240, unitHeight := 130, pStartX := 20, pStartY := 110, pGap := 15
+    
+    mapDDL.OnEvent("Change", (*) => LoadCoordsForMap(iniSection, mapDDL.Text, editsMap))
+
+    Loop 3 {
+        currX := pStartX + (A_Index - 1) * (unitWidth + pGap)
+        popup.SetFont("s12 bold", "Segoe UI")
+        popup.AddGroupBox("x" currX " y" pStartY " w" unitWidth " h" unitHeight, "Unit" A_Index)
+        boxInnerX := currX + 15
+        
+        savedX := IniRead(IniFile, iniSection, mapDDL.Text . "_Unit" A_Index "_X", "0")
+        savedY := IniRead(IniFile, iniSection, mapDDL.Text . "_Unit" A_Index "_Y", "0")
+        
+        popup.SetFont("s11 bold", "Segoe UI")
+        popup.AddText("x" boxInnerX " y" pStartY + 30 " w90 Center", "X")
+        popup.SetFont("s10 norm", "Segoe UI")
+        editX := popup.AddEdit("x" boxInnerX " y" pStartY + 52 " w90 Center", savedX)
+        
+        popup.SetFont("s11 bold", "Segoe UI")
+        popup.AddText("x" (boxInnerX + 110) " y" pStartY + 30 " w90 Center", "Y")
+        popup.SetFont("s10 norm", "Segoe UI")
+        editY := popup.AddEdit("x" (boxInnerX + 110) " y" pStartY + 52 " w90 Center", savedY)
+        
+        editsMap["Unit" A_Index "_X"] := editX
+        editsMap["Unit" A_Index "_Y"] := editY
+        
+        popup.SetFont("s10 norm", "Segoe UI")
+        btnSel := popup.AddButton("x" boxInnerX " y" pStartY + 88 " w200 h30", "Select Coord")
+        btnSel.OnEvent("Click", OpenImagePicker.Bind(popup, mapDDL, editX, editY, editsMap, iniSection))
+    }
+    
+    popup.Show("w805 h260")
+}
+
+LoadCoordsForMap(section, mapName, editsMap) {
+    Loop 3 {
+        xVal := IniRead(IniFile, section, mapName . "_Unit" A_Index "_X", "0")
+        yVal := IniRead(IniFile, section, mapName . "_Unit" A_Index "_Y", "0")
+        editsMap["Unit" A_Index "_X"].Value := xVal
+        editsMap["Unit" A_Index "_Y"].Value := yVal
+    }
+}
+
+SaveCoords(popupObj, section, mapDDL, editsMap) {
+    selectedMap := mapDDL.Text
+    IniWrite(selectedMap, IniFile, section, "Map")
+    Loop 3 {
+        IniWrite(editsMap["Unit" A_Index "_X"].Value, IniFile, section, selectedMap . "_Unit" A_Index "_X")
+        IniWrite(editsMap["Unit" A_Index "_Y"].Value, IniFile, section, selectedMap . "_Unit" A_Index "_Y")
+    }
+    MsgBox(section . " coordinates saved for " . selectedMap . "!", "Saved", "4096")
+    popupObj.Destroy()
+}
+
+
+; ==============================================================================
+; IMAGE PICKER WINDOW
+; ==============================================================================
+OpenImagePicker(parentPopup, ddlCtrl, targetEditX, targetEditY, activeEditsMap, activeSection, *) {
+    selectedMap := ddlCtrl.Text
+    
+    imagePath := ImageFolder . "\" . selectedMap . ".png"
+    if !FileExist(imagePath)
+        imagePath := ImageFolder . "\" . selectedMap . ".jpg"
+    
+    if !FileExist(imagePath) {
+        result := MsgBox("Image not found: " . selectedMap . " (.png or .jpg)`n`nExpected Folder:`n" . ImageFolder . "`n`nWould you like to open the image folder?", "Missing Image", "4096 YesNo Icon!")
+        if (result == "Yes")
+            Run(ImageFolder)
+        return
+    }
+
+    imgGui := Gui("+Owner" parentPopup.Hwnd " +AlwaysOnTop -Caption", "Pick Coordinate")
+    
+    try {
+        picCtrl := imgGui.AddPicture("x0 y0 w800 h600", imagePath)
+    } catch Error as err {
+        imgGui.Destroy()
+        MsgBox("Failed to load image control!`n`nFile: " . imagePath . "`n`nDetails: " . err.Message, "Image Load Error", "4096 Icon!")
+        return
+    }
+
+    sectionsToScan := ["Slot1", "Slot2", "Slot3", "Slot4", "Senku", "Ramen"]
+    colorList      := ["Red", "00FF00", "00FFFF", "Yellow", "FF00FF", "FFA500"]
+    
+    for secIdx, secName in sectionsToScan {
+        mColor := colorList[secIdx]
+        prefix := (secName == "Senku") ? "Sen" : (secName == "Ramen") ? "Ram" : ("S" . SubStr(secName, 5))
+        
+        Loop 3 {
+            uX := 0
+            uY := 0
+            
+            if (secName == activeSection) {
+                try {
+                    uX := Integer(activeEditsMap["Unit" A_Index "_X"].Value)
+                    uY := Integer(activeEditsMap["Unit" A_Index "_Y"].Value)
+                }
+            }
+            
+            if (uX <= 0 || uY <= 0) {
+                try {
+                    uX := Integer(IniRead(IniFile, secName, selectedMap . "_Unit" A_Index "_X", "0"))
+                    uY := Integer(IniRead(IniFile, secName, selectedMap . "_Unit" A_Index "_Y", "0"))
+                }
+            }
+            
+            if (uX > 0 && uY > 0) {
+                DrawMarker(imgGui, uX, uY, prefix . "-U" A_Index, mColor)
+            }
+        }
+    }
+
+    picCtrl.OnEvent("Click", (ctrl, *) => OnMapClick(imgGui, targetEditX, targetEditY))
+    imgGui.Show("w800 h600")
+}
+
+DrawMarker(guiObj, x, y, label, colorHex) {
+    guiObj.SetFont("s11 bold c" . colorHex, "Segoe UI")
+    guiObj.AddText("x" (x - 10) " y" (y - 12) " w24 h24 BackgroundTrans Center", "⊕")
+    
+    guiObj.SetFont("s8 bold cWhite", "Segoe UI")
+    guiObj.AddText("x" (x + 8) " y" (y - 12) " w45 h15 BackgroundTrans", label)
+}
+
+OnMapClick(imgGuiObj, targetEditX, targetEditY) {
+    CoordMode("Mouse", "Client")
+    MouseGetPos(&mouseX, &mouseY)
+    
+    targetEditX.Value := mouseX
+    targetEditY.Value := mouseY
+    
+    imgGuiObj.Destroy()
+    
+    ToolTip("Captured Coords: X=" mouseX " | Y=" mouseY)
+    SetTimer () => ToolTip(), -1500
+}
+
+
+; ==============================================================================
+; NAVIGATION / HELPER FUNCTIONS
+; ==============================================================================
 UpdateGuiVisibility(*) {
     selectedMode := MyGui["Mode"].Text
 
@@ -71,6 +353,7 @@ UpdateGuiVisibility(*) {
     ddlRaid.Visible   := false
     txtStage2.Visible := false
     ddlStage2.Visible := false
+
     ; Show specific controls based on mode
     switch selectedMode {
         case "Expedition":
@@ -88,8 +371,8 @@ UpdateGuiVisibility(*) {
             txtChall2.Visible := true
         
         case "Raid":
-            txtRaid.Visible := true
-            ddlRaid.Visible := true
+            txtRaid.Visible   := true
+            ddlRaid.Visible   := true
             txtStage2.Visible := true
             ddlStage2.Visible := true
     }
@@ -100,9 +383,9 @@ MoveGui(){
 
     if WinExist(RobloxWindow) {
         WinGetPos(&x, &y, &w, &h, RobloxWindow)
-        MyGui.Show("x" (x + w - 10) " y" y " w350 h235")
+        MyGui.Show("x" (x + w - 10) " y" y " w350 h275")
     } else {
-        MyGui.Show("w350 h235")
+        MyGui.Show("w350 h275")
     }
 }
 
@@ -110,11 +393,6 @@ StartGameplay(){
     selectedMode := MyGui["Mode"].Text
 
     Switch selectedMode {
-        Case "Gem Farm":
-            ;while (true) {
-                GemFarmGameplay()
-                Sleep(500)
-            ;}
         Case "Story":
             while (true) {
                 StoryGameplay()
@@ -131,9 +409,7 @@ StartGameplay(){
                 Sleep(5000)
             }
         Case "Expedition":
-            ;while (true) {
-                ExpeditionGameplay()
-                Sleep(5000)
-            ;}
+            ExpeditionGameplay()
+            Sleep(5000)
     }
 }
