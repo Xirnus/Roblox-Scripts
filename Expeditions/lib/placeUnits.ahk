@@ -14,11 +14,11 @@ SafePlacement(unit, x, y) {
     ;loop {
         ; Try to place the unit
         MouseMove(x, y)
-        Sleep 400
+        Sleep 1000
         Send(unit)
-        Sleep 400
+        Sleep 1000
         BetterClick(x, y)
-        Sleep 400
+        Sleep 1000
 
         ; Check for spectate screen to confirm success
         ;if (FindText(&X, &Y, 0, 0, 809, 627, 0, 0, unitplaced)) {
