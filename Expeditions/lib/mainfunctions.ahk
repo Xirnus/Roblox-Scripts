@@ -1,5 +1,8 @@
 #Include FindText.ahk
 
+
+Start:="|<VoteStart>*98$43.8LzGDzC4l06S1NX003000FGUPY00MV8Ack14Dzvnzzw0000000E"
+
 ; Common functions
 BetterClick(x, y) {
     MouseMove(x, y)
@@ -40,4 +43,15 @@ FindLobby() {
         return true
     }
     return false
+}
+
+VoteStart(){
+    BetterClick(406, 180)
+}
+
+FailedRun(){
+    if FindText(&X, &Y, 0, 0, 809, 627, 0, 0, Start) {
+        ToolTip("Failed Run")
+        return true
+    }
 }

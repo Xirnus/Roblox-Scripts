@@ -22,45 +22,20 @@ F9:: {
 }
 
 F7::{
-    stages := [
-        ["SchoolGrounds", SchoolGrounds],
-        ["FlowerForest", FlowerForest],
-        ["RoseKingdom", RoseKingdom],
-        ["FairyKingForest", FairyKingForest],
-        ["KingsTomb", KingsTomb]
-    ]
-    for stage in stages {
-        name := stage[1]
-        pattern := stage[2]
-        if (FindText(&X, &Y, 0, 0, 816, 638, 0, 0, pattern)) {
-            ToolTip(name . " Found")
-            Sleep(1000)
-        }
-        else {
-            ToolTip(name . " Not Found")
-            Sleep(1000)
-        }
-    }
+Send("{w down}")
+Sleep(3000)
+Send("{w up}")
+}
+F8::{
+SpiritCity:="|<SpiritCity>*89$39.01nU3U3sGbDb0VzSh2jwsE0nU9l84CQ9LV0Zn5WV24Z0Yntzzbz41s000BU60000kU"
+
+if (ok:=FindText(&X, &Y, 0, 0, 800, 599, 0, 0, SpiritCity))
+{
+  FindText().Click(X, Y, "L")
+}
 }
 
-F8::{
-    wheeldownCount := 15
-    LookDown() {
-        centerX := 408
-        centerY := 319
-
-        BetterClick(centerX, centerY)
-        loop 40 {
-            SendInput("{WheelUp}")
-            Sleep 50
-        }
-        Sleep 1000
-        SendInput(Format("{Click {} {} Left}", centerX, centerY + 200))
-        Sleep 1000
-        loop wheeldownCount {
-            SendInput("{WheelDown}")
-            Sleep 50
-        }
-    }
+F6::{
+    global wheeldownCount := 15
     LookDown()
 }
