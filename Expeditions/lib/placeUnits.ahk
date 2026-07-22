@@ -62,12 +62,13 @@ PlaceUnitsFromIni(mapName) {
         ["3", "Slot3"],
         ["4", "Slot4"]
     ]
+
+    runs:= 0
     
     for item in slotSequence {
         unitHotkey := item[1]
         iniSection := item[2]
         
-        ; Set default placement: 3 for Senku, 1 for everything else
         defaultPlacements := (iniSection == "Senku") ? "3" : "1"
         placementCount := Integer(IniRead(iniFile, iniSection, "Placements", defaultPlacements))
         
@@ -83,10 +84,48 @@ PlaceUnitsFromIni(mapName) {
             yVal := Integer(IniRead(iniFile, iniSection, yKey, "0"))
             
             if (xVal > 0 && yVal > 0) {
+                ; --- Dynamic Expedition Coordinate Adjustment ---
+                if (modeDDL.Text == "Expedition") {
+                    ; Check for Camera Position 1
+                    /*
+                    if FindText(&X, &Y, 362, 405, 415, 452, 0, 0, ExpeditionsView1) {
+                        ; Option A: Apply a offset relative to camera angle 1
+                        xVal += 20  ; Adjust offset as needed
+                        yVal += 15  
+                        
+                        ; Option B: Read from a separate custom INI section if you saved specific coords
+                        ; xVal := Integer(IniRead(iniFile, iniSection, mapName . "_Cam1_Unit" . unitNum . "_X", xVal))
+                        ; yVal := Integer(IniRead(iniFile, iniSection, mapName . "_Cam1_Unit" . unitNum . "_Y", yVal))
+                    }
+                    */
+                    ; Check for Camera Position 2
+                    if FindText(&X, &Y, 363, 422, 421, 463, 0, 0, ExpeditionsView2) {
+                        ToolTip("Camera Position 2 Detected, Added Offset")
+                        yVal -= 15  
+                    }
+                    else if FindText(&X, &Y, 362, 405, 415, 452, 0, 0, ExpContinueRoseKingdom2) {
+                        yVal -= 15  
+                    }
+                }
+
                 SafePlacement(unitHotkey, xVal, yVal)
                 
                 if CheckGameState()
                     return true
+
+                runs++
+                ToolTip("") 
+                if (runs >= 100) {
+                    Send("{c down}")
+                    Sleep(300)
+                    Send("{c up}")
+                    webhook()
+                    Sleep(300)
+                    Send("{c down}")
+                    Sleep(300)
+                    Send("{c up}")
+                    runs := 0
+                }
             }
         }
     }
@@ -101,9 +140,16 @@ CheckGameState() {
         ChallengeGameplay()
         return true
     } else if FailedRun() {
-        VoteStart()
         Sleep(Integer(MyGui["SleepMs"].Value))
-        return true
+        Send("{c down}")
+        Sleep(300)
+        Send("{c up}")
+        webhook()
+        Sleep(300)
+        Send("{c down}")
+        Sleep(300)
+        Send("{c up}")
+        VoteStart()
     } 
     else if (modeDDL.Text == "Challenge" && FindText(&X, &Y, 0, 0, 800, 599, 0, 0, Results)) {
         ToolTip("Results Found")
@@ -117,6 +163,24 @@ CheckGameState() {
         BetterClick(Modes[3][1], Modes[3][2])
         Sleep(Integer(MyGui["SleepMs"].Value))
         return true
+    }
+    else if modeDDL.Text == "Expedition" && FindText(&X, &Y, 0, 0, 800, 599, 0, 0, ExpContinue) {
+            WinGetClientPos(&clientX, &clientY, , , RobloxWindow)
+            
+            targetX := X - clientX
+            targetY := Y - clientY
+
+            BetterClick(targetX, targetY)
+        Sleep(Integer(MyGui["SleepMs"].Value))
+        if FindText(&X, &Y, 0, 0, 800, 599, 0, 0, ExpContinue2) {
+            WinGetClientPos(&clientX, &clientY, , , RobloxWindow)
+            
+            targetX := X - clientX
+            targetY := Y - clientY
+
+            BetterClick(targetX, targetY)
+            Sleep(Integer(MyGui["SleepMs"].Value))
+        }
     }
     return false
 }

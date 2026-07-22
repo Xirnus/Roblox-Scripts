@@ -64,6 +64,9 @@ if !IsSet(MyGui) {
     txtChall  := MyGui.Add("Text", "x185 y15 w150 Center", "Challenge Only:")
     txtChall2 := MyGui.Add("Text", "x185 y+2 w150 Center", "(Auto Start OFF)")
 
+    btnWebhook := MyGui.Add("Button", "x185 y145 w150 h32", "Configure Webhook")
+    btnWebhook.OnEvent("Click", (*) => webhookConfig())
+
     ; --- BOTTOM SECTION ---
     MyGui.Add("Text", "x15 y200 w320 vWinText Center", "F9: Start | ESC: Stop")
 
@@ -71,7 +74,59 @@ if !IsSet(MyGui) {
     UpdateGuiVisibility()
 }
 
+webhookConfig(){
+    global WebhookGui, MyGui, IniFile
+    
+    ; Safely check if WebhookGui exists AND its window is open
+    if (IsSet(WebhookGui) && WebhookGui && WinExist("ahk_id " . WebhookGui.Hwnd)) {
+        WebhookGui.Show()
+        return
+    }
 
+    WebhookGui := Gui("+Owner" . MyGui.Hwnd . " +AlwaysOnTop", "Webhook Configuration")
+
+    ; Title
+    WebhookGui.SetFont("s16 bold", "Segoe UI")
+    WebhookGui.AddText("x20 y15 w480 Center", "Webhook Settings")
+
+    ; Read saved URL
+    savedWebhook := IniRead(IniFile, "Webhook", "URL", "")
+    cleanDisplayUrl := RegExReplace(savedWebhook, '[\[\]"]')
+
+    ; Input Label
+    WebhookGui.SetFont("s10 norm", "Segoe UI")
+    WebhookGui.AddText("x20 y65 w480", "Discord Webhook URL:")
+
+    ; -Wrap prevents text wrapping without showing a ugly scrollbar bar
+    edtWebhook := WebhookGui.AddEdit("x20 y88 w480 h28 -Wrap vWebhookUrl", cleanDisplayUrl)
+
+    ; Save Button
+    btnSave := WebhookGui.AddButton("x200 y135 w120 h32 Default", "Save")
+    btnSave.OnEvent("Click", (*) => SaveWebhook(edtWebhook.Value))
+
+    WebhookGui.Show("w520 h185")
+}
+
+SaveWebhook(urlValue) {
+    global IniFile, WebhookGui, myWebhookURL
+    
+    ; Remove any existing quotes/brackets typed by the user
+    cleanUrl := RegExReplace(Trim(urlValue), '[\[\]"]')
+    
+    ; In AHK v2, two double quotes ("") inside a string literal produce a literal double quote
+    formattedUrl := '"' . cleanUrl . '"'
+    
+    ; 1. Write formatted URL to settings.ini
+    IniWrite(formattedUrl, IniFile, "Webhook", "URL")
+    
+    ; 2. Update active global variable immediately
+    myWebhookURL := formattedUrl
+    
+    MsgBox("Webhook URL saved", "Saved", "4096 Iconi")
+    
+    if IsSet(WebhookGui) && WebhookGui
+        WebhookGui.Destroy()
+}
 ; ==============================================================================
 ; UNIT PLACEMENT GUI (CHILD WINDOW)
 ; ==============================================================================
@@ -182,7 +237,7 @@ OpenCoordPopup(slotTitle, iniSection, *) {
     popup.SetFont("s10 norm", "Segoe UI")
     savedMap := IniRead(IniFile, iniSection, "Map", "School Grounds")
     
-    mapDDL := popup.AddDDL("x600 y65 w180", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "Spirit1", "Spirit2", "Spirit3"])
+    mapDDL := popup.AddDDL("x600 y65 w180", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "Spirit1", "Spirit2", "Spirit3", "Expeditions"])
 
     try {
         mapDDL.Text := savedMap
@@ -246,7 +301,6 @@ SaveCoords(popupObj, section, mapDDL, editsMap) {
         IniWrite(editsMap["Unit" A_Index "_Y"].Value, IniFile, section, selectedMap . "_Unit" A_Index "_Y")
     }
     MsgBox(section . " coordinates saved for " . selectedMap . "!", "Saved", "4096")
-    popupObj.Destroy()
 }
 
 

@@ -3,6 +3,7 @@
 #Include lib\gui.ahk
 #Include lib\navigation.ahk
 #Include lib\placeUnits.ahk
+#Include lib\webhook.ahk
 
 CoordMode("Mouse", "Client")
 RobloxWindow := "ahk_exe RobloxPlayerBeta.exe"
@@ -22,10 +23,18 @@ F9:: {
     StartGameplay()
 }
 
+F8::{
+ChalStoryGameplay() 
+}
+
 F7::{
-Send("{s down}{d down}")
-Sleep(3000)
-Send("{s up}{d up}")
+    placeid :=84515722934860
+    JoinRobloxPlace(placeId) {
+    ; Launches the Roblox client and joins the specified Place ID directly
+    Run("https://www.roblox.com/games/start?placeId=" . placeId)
+}
+
+JoinRobloxPlace(placeid)
 }
 F6::{
     global wheeldownCount := 15
