@@ -62,6 +62,12 @@ F6::{
     LookDown()
 }
 
-F1::{ 
-IngameCheck()
+F5::{
+    Send("{s down}")
+    Sleep(500)
+    Send("{s up}")
+    Sleep(200)
+    Send("{d down}")
+    Sleep(2300)
+    Send("{d up}")
 }

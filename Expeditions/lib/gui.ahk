@@ -23,7 +23,7 @@ if !IsSet(MyGui) {
 
     ; --- LEFT COLUMN ---
     MyGui.Add("Text", "x15 y15 w150 Center", "Select Game Mode:")
-    modeDDL := MyGui.Add("DropDownList", "x15 y+5 w150 vMode Choose1", ["Story", "Raid", "Challenge", "Expedition"])
+    modeDDL := MyGui.Add("DropDownList", "x15 y+5 w150 vMode Choose1", ["Story", "Raid", "Challenge", "Expedition", "Event Stages"])
     
     ; Event Listener: Fires whenever 'vMode' changes selection
     modeDDL.OnEvent("Change", UpdateGuiVisibility)
@@ -59,6 +59,9 @@ if !IsSet(MyGui) {
 
     txtStage2 := MyGui.Add("Text", "x185 y+12 w150 Center", "Select Raid Stage:")
     ddlStage2 := MyGui.Add("DropDownList", "x185 y+5 w150 vRaidMapStage Choose1", ["Stage 1", "Stage 2", "Stage 3"])
+
+    txtEventStage := MyGui.Add("Text", "x185 y15 w150 Center", "Select Event Stage:")
+    ddlEventStage := MyGui.Add("DropDownList", "x185 y+5 w150 vEventMapStage Choose1", ["Stage 1", "Stage 2", "Stage 3"])
 
     ; Challenge Controls
     txtChall  := MyGui.Add("Text", "x185 y15 w150 Center", "Challenge Only:")
@@ -237,7 +240,7 @@ OpenCoordPopup(slotTitle, iniSection, *) {
     popup.SetFont("s10 norm", "Segoe UI")
     savedMap := IniRead(IniFile, iniSection, "Map", "School Grounds")
     
-    mapDDL := popup.AddDDL("x600 y65 w180", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "Spirit1", "Spirit2", "Spirit3", "Expeditions"])
+    mapDDL := popup.AddDDL("x600 y65 w180", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "Spirit1", "Spirit2", "Spirit3", "Expeditions", "Villain1", "Villain2", "Villain3"])
 
     try {
         mapDDL.Text := savedMap
@@ -407,6 +410,8 @@ UpdateGuiVisibility(*) {
     ddlRaid.Visible   := false
     txtStage2.Visible := false
     ddlStage2.Visible := false
+    txtEventStage.Visible := false
+    ddlEventStage.Visible := false
 
     ; Show specific controls based on mode
     switch selectedMode {
@@ -429,6 +434,10 @@ UpdateGuiVisibility(*) {
             ddlRaid.Visible   := true
             txtStage2.Visible := true
             ddlStage2.Visible := true
+
+        case "Event Stages":
+            txtEventStage.Visible := true
+            ddlEventStage.Visible := true
     }
 }
 
@@ -448,22 +457,14 @@ StartGameplay(){
 
     Switch selectedMode {
         Case "Story":
-            while (true) {
-                StoryGameplay()
-                Sleep(5000)
-            }
+            StoryGameplay()
         Case "Raid":
-            while (true) {
-                RaidGameplay()
-                Sleep(5000)
-            }
+            RaidGameplay()
         Case "Challenge":
-            while (true) {
-                ChallengeGameplay()
-                Sleep(5000)
-            }
+            ChallengeGameplay()
         Case "Expedition":
             ExpeditionGameplay()
-            Sleep(5000)
+        Case "Event Stages":
+            EventGameplay()
     }
 }

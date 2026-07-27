@@ -152,6 +152,9 @@ ScanLoop() {
 
     if FindText(&X, &Y, 533, 743, 621, 805, 0, 0, PlayAgain) {
         ToolTip("Play Again Detected!")
+        Send("{o down}")
+        Sleep(500)
+        Send("{o up}")
         webhook()
         BetterClick(X, Y)
         Sleep(1000)
@@ -179,6 +182,8 @@ ScanLoop() {
     } else {
         ToolTip("Scanning...")
         Click("Up")
+        Send("e")
+        Sleep(100)
     }
 }
 

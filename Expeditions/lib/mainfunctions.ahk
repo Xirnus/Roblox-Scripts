@@ -88,18 +88,19 @@ EnterGameMode() {
         ["selectbtn", SelectStage], 
         ["startbtn", StartButton]
     ]
-    BetterClick(100, 100)
-    for stage in confirmStage {
-        name := stage[1]
-        pattern := stage[2]
-        if FindText(&X, &Y, 0, 0, 800, 599, 0, 0, pattern) {
-            BetterClickFindText(x, y)
-        } else {
-            ToolTip(name . " Not Found")
-            Sleep(1000)
-            return false
-        }
-        Sleep(1000)
+    Loop 2{
+        for stage in confirmStage {
+            name := stage[1]
+            pattern := stage[2]
+                if FindText(&X, &Y, 0, 0, 800, 599, 0, 0, pattern) {
+                    BetterClickFindText(x, y)
+                } else {
+                    ToolTip(name . " Not Found")
+                    Sleep(1000)
+                }
+                Sleep(1000)
+            }
+            ToolTip("")
     }
     ToolTip("Entered Game Mode")
     Sleep(2000)
