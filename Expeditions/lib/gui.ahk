@@ -44,11 +44,11 @@ if !IsSet(MyGui) {
     ; --- RIGHT COLUMN (Positioned at x185 y15) ---
     ; Expedition Controls
     txtExp   := MyGui.Add("Text", "x185 y15 w150 Center", "Select Expedition Map:")
-    ddlExp   := MyGui.Add("DropDownList", "x185 y+5 w150 vExpeditionMap Choose1", ["School Grounds", "Flower Forest", "Rose Kingdom"])
+    ddlExp   := MyGui.Add("DropDownList", "x185 y+5 w150 vExpeditionMap Choose1", ["School Grounds", "Flower Forest", "Rose Kingdom", "East Town"])
 
     ; Story Controls
     txtStory := MyGui.Add("Text", "x185 y15 w150 Center", "Select Story Map:")
-    ddlStory := MyGui.Add("DropDownList", "x185 y+5 w150 vStoryMap Choose1", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb"])
+    ddlStory := MyGui.Add("DropDownList", "x185 y+5 w150 vStoryMap Choose1", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "East Town"])
 
     txtStage := MyGui.Add("Text", "x185 y+12 w150 Center", "Select Story Stage:")
     ddlStage := MyGui.Add("DropDownList", "x185 y+5 w150 vStoryMapStage Choose1", ["Stage 1", "Stage 2", "Stage 3", "Stage 4", "Stage 5", "Infinite", "Mastery"])
@@ -240,7 +240,7 @@ OpenCoordPopup(slotTitle, iniSection, *) {
     popup.SetFont("s10 norm", "Segoe UI")
     savedMap := IniRead(IniFile, iniSection, "Map", "School Grounds")
     
-    mapDDL := popup.AddDDL("x600 y65 w180", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "Spirit1", "Spirit2", "Spirit3", "Expeditions", "Villain1", "Villain2", "Villain3"])
+    mapDDL := popup.AddDDL("x600 y65 w180", ["School Grounds", "Flower Forest", "Rose Kingdom", "Fairy King Forest", "King's Tomb", "East Town", "Spirit1", "Spirit2", "Spirit3", "Villain1", "Villain2", "Villain3", "Expeditions"])
 
     try {
         mapDDL.Text := savedMap

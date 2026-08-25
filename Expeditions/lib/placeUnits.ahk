@@ -80,7 +80,7 @@ PlaceUnitsFromIni(mapName) {
 
                     Sleep(500)
 
-                    if FindText(&X, &Y, 0, 0, 800, 599, 0, 0, UnitPlaced) {
+                    if (modeDDL.Text != "Expedition") && FindText(&X, &Y, 0, 0, 800, 599, 0, 0, UnitPlaced) {
                         placedUnits.Push(unitID)
                         ToolTip("Placed: " . unitID)
                         Sleep(500)

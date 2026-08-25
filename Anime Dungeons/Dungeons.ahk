@@ -3,17 +3,14 @@ Esc::ExitApp  ; Exit script with Escape key
 ; Run a program on Middle Click
 global isScriptRunning := False
 #MaxThreadsPerHotkey 2
-XButton1:: {
+F9:: {
     global isScriptRunning
     if (!isScriptRunning) {
         isScriptRunning := True
         ToolTip("Macro Started")
         SetTimer(() => ToolTip(), -1000)
-        while true {
-            Send("{f down} {e down}")
-            Sleep 500
-            Send("{f up} {e up}")
-        }
+        SetTimer(BuffLoop, 60000)
+        SetTimer(SpellLoop, 1000) ; Start the spell loop every 1 second
     }
     ; If already running, toggle Pause / Resume
     else {
@@ -26,3 +23,27 @@ XButton1:: {
         }
     }
 }
+
+BuffLoop() {
+    Send("{1}")
+    Sleep(500)
+    Send("{2}")
+    Sleep(500)
+    Send("{3}")
+}
+
+SpellLoop() {
+    Send("{Q}")
+    Sleep(300)
+    Send("{XButton1}")
+    Sleep(300)
+    Send("{XButton2}")
+    Sleep(300)
+    Send("{E}")
+    Sleep(300)
+    Send("{r}")
+    Sleep(300)
+    Send("{tab}")
+}
+
+

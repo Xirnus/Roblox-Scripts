@@ -50,7 +50,7 @@ LookDown() {
 }
 
 FindLobby() {
-    if (FindText(&X, &Y, 0, 0, 809, 627, 0, 0, Lobby)) {
+    if (FindText(&X, &Y, 8, 31, 800, 599, 0, 0, Lobby)) {
         ToolTip("Lobby Found")
         return true
     }
@@ -59,12 +59,6 @@ FindLobby() {
 
 VoteStart(){
     BetterClick(406, 180)
-}
-
-FailedRun(){
-    if FindText(&X, &Y, 0, 0, 809, 627, 0, 0, Start) {
-        return true
-    }
 }
 
 LobbySetUp(){

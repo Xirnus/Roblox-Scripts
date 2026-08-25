@@ -58,6 +58,60 @@ FindAndExecuteStage(stageList) {
     return false
 }
 
+/*
+global GameplayModes := [
+    ["Story", LobbySetUp, BetterClick(Modes[1][1], Modes[1][2]), SelectMap(StoryMaps, MyGui["StoryMap"].Text), BetterClick(StoryStagesPlacements[MyGui["StoryMapStage"].Text][1], StoryStagesPlacements[MyGui["StoryMapStage"].Text][2]), BetterClick(254, 257), EnterGameMode(), RunGameMode(StoryStages)],
+    ["Raid", LobbySetUp, BetterClick(Modes[2][1], Modes[2][2])],
+    ["Challenge", LobbySetUp, BetterClick(Modes[3][1], Modes[3][2])],
+    ["Event", EventGameplay]
+]
+
+EnterGameplay(Mode){
+    sleepMs := Integer(MyGui["SleepMs"].Value)
+
+    for steps in Mode {
+
+    }
+}
+*/
+
+SelectMap(mapData, selectedMapName){
+    mapInfo := mapData[selectedMapName]
+    posX := mapInfo[1]
+    posY := mapInfo[2]
+    needsScroll := mapInfo[3]
+
+    ; Scroll if it's on the second page
+    if (needsScroll) {
+        ; Move mouse over the map selection container area first
+        BetterClick(130,183)
+        Sleep(Integer(MyGui["SleepMs"].Value))
+        
+        ; Scroll down/right (adjust WheelDown or Drag depending on game UI)
+        Send "{WheelDown 10}"
+        Sleep(Integer(MyGui["SleepMs"].Value))
+    }
+
+    ; Click the map
+    BetterClick(posX, posY)
+}
+
+StoryGameplay(){
+    if LobbySetUp() {
+        BetterClick(Modes[1][1], Modes[1][2])
+        Sleep(Integer(MyGui["SleepMs"].Value))
+        SelectMap(StoryMaps, MyGui["StoryMap"].Text)
+        Sleep(Integer(MyGui["SleepMs"].Value))
+        stagePos := StoryStagesPlacements[MyGui["StoryMapStage"].Text]
+        BetterClick(stagePos[1], stagePos[2])
+        Sleep(Integer(MyGui["SleepMs"].Value))
+        BetterClick(254, 257)
+        Sleep(Integer(MyGui["SleepMs"].Value))
+        EnterGameMode()
+        RunGameMode(StoryStages)
+    }
+}
+
 ;EXPEDITION 
 ExpeditionGameplay() {
     global ExpeditionMaps
@@ -66,15 +120,14 @@ ExpeditionGameplay() {
     Sleep(Integer(MyGui["SleepMs"].Value))
     mapPos := ExpeditionMaps[MyGui["ExpeditionMap"].Text]
     BetterClick(mapPos[1], mapPos[2])
-    BetterClick(759, 391)
-    Sleep(1000)
-    BetterClick(759, 391)
-    Sleep(1000)
-    BetterClick(759, 391)
+    Loop 2{
+        BetterClick(307, 438)
+        Sleep(1000)
+    }
     Sleep(Integer(MyGui["SleepMs"].Value))
-    BetterClick(723, 526)
+    BetterClick(256, 578)
     Sleep(Integer(MyGui["SleepMs"].Value))
-    BetterClick(479, 365)
+    BetterClick(474, 365)
     RunGameMode(ExpeditionStages)
 }
 ;EXPEDITION END
@@ -111,43 +164,7 @@ ChallengeGameplay() {
 }  
 
 ;CHALLENGE END
-SelectMap(mapData, selectedMapName){
-    mapInfo := mapData[selectedMapName]
-    posX := mapInfo[1]
-    posY := mapInfo[2]
-    needsScroll := mapInfo[3]
 
-    ; Scroll if it's on the second page
-    if (needsScroll) {
-        ; Move mouse over the map selection container area first
-        BetterClick(130,183)
-        Sleep(Integer(MyGui["SleepMs"].Value))
-        
-        ; Scroll down/right (adjust WheelDown or Drag depending on game UI)
-        Send "{WheelDown 5}"
-        Sleep(Integer(MyGui["SleepMs"].Value))
-    }
-
-    ; Click the map
-    BetterClick(posX, posY)
-}
-
-StoryGameplay(){
-    if LobbySetUp() {
-        BetterClick(Modes[1][1], Modes[1][2])
-        Sleep(Integer(MyGui["SleepMs"].Value))
-        SelectMap(StoryMaps, MyGui["StoryMap"].Text)
-        Sleep(Integer(MyGui["SleepMs"].Value))
-        stagePos := StoryStagesPlacements[MyGui["StoryMapStage"].Text]
-        BetterClick(stagePos[1], stagePos[2])
-        Sleep(Integer(MyGui["SleepMs"].Value))
-        BetterClick(254, 257)
-        Sleep(Integer(MyGui["SleepMs"].Value))
-        EnterGameMode()
-        RunGameMode(StoryStages)
-    }
-}
-; Story END
 
 ; RAID START
 
