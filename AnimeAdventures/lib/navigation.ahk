@@ -5,21 +5,23 @@
 
 
 goToEvent(){
+    ToolTip("Waiting for lobby...")
     while !checkImage(lobby){
-        if (checkImage(lobby)){
-            BetterClick(767, 475)
-            Sleep(300)
-            BetterClick(492, 333)
-            Sleep(300)
-            Send("{a down}")
-            Sleep(3300)
-            Send("{a up}")
-            Sleep(500)
-            Send("{w down}")
-            Sleep(4300)
-            Send("{w up}")
-            ToolTip("")
-        }
+        Sleep(500)
+    }
+    if (checkImage(lobby)){
+        BetterClick(767, 475)
+        Sleep(300)
+        BetterClick(492, 333)
+        Sleep(300)
+        Send("{a down}")
+        Sleep(3300)
+        Send("{a up}")
+        Sleep(500)
+        Send("{w down}")
+        Sleep(4300)
+        Send("{w up}")
+        ToolTip("")
     }
 }
 

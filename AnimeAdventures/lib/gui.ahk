@@ -2,26 +2,26 @@
 
 #Include navigation.ahk
 
+global wins := 0
+global losses := 0
+global games := 0
+global StatsText
+
 if !IsSet(MyGui) {
     MyGui := Gui("+AlwaysOnTop")
-    MyGui.Title := "Omsim Macro"
+    MyGui.Title := "Anime Adventures Macro"
     MyGui.SetFont("s10", "Segoe UI")
 
-    ; --- LEFT COLUMN ---
-    MyGui.Add("Text", "x15 y15 w150 Center", "Select Game Mode:")
-    modeDDL := MyGui.Add("DropDownList", "x15 y+5 w150 vMode Choose1", ["Story", "Raid", "Challenge", "Expedition", "Event Stages"])
-
     ; Sleep Input (Positioned right below Game Mode selection)
-    MyGui.Add("Text", "x15 y+20 w75", "Sleep (ms):")
-    MyGui.Add("Edit", "x+2 yp-3 w73 vSleepMs", "1000")
+    StatsText := MyGui.Add("Text", "x15 y+20 w200", "Wins: 0 | Loss: 0 | Games: 0")
     
-    ; Helper text
-    MyGui.SetFont("s8 cGray")
-    MyGui.Add("Text", "x15 y+2 w150", "1sec = 1000")
-    MyGui.SetFont("s10 cDefault")
-
     ; --- BOTTOM SECTION ---
     MyGui.Add("Text", "x15 y200 w320 vWinText Center", "F9: Start / Pause / Resume | F8: Reload | ESC: Stop")
+}
+
+UpdateStats() {
+    global wins, losses, games, StatsText
+    StatsText.Text := "Wins: " wins " | Loss: " losses " | Games: " games
 }
 
 MoveGui(){

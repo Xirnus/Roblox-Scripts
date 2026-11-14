@@ -52,6 +52,7 @@ F8::{
 
 F7::{
     upgUnits()
+runFinished()
 }
 
 F6::{

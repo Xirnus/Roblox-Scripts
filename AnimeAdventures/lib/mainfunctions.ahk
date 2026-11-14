@@ -14,7 +14,7 @@ BetterClick(x, y) {
 }
 
 checkImage(pattern) {
-    if (FindText(&X, &Y, 0, 0, 809, 627, 0, 0, pattern)) {
+    if (FindText(&X, &Y, 0, 0, 809, 627, 0, 10, pattern)) {
         return true
     }
     return false
@@ -93,6 +93,6 @@ TypeNumberCaptcha(text) {
 
     for char in StrSplit(text) {
         SendEvent(char)
-        Sleep(50)
+        Sleep(100)
     }
 }
