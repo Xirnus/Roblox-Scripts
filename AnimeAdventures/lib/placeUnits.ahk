@@ -18,10 +18,9 @@ unitPlacements(){
         Sleep(500)
     }
     if (checkImage(voteStart)){
-        Sleep(55000)
-        ToolTip("InGame", 100, 100)
-        Sleep(300)
         BetterClick(358, 107)
+        Sleep(50000)
+        ToolTip("InGame", 100, 100)
         Sleep(300)
         ToolTip("")
         LookDown()
@@ -59,7 +58,6 @@ unitPlacements(){
             }
         }
     }
-
 }
 
 unitPlaceCheck(){
@@ -110,13 +108,13 @@ upgUnits(){
 }
 
 runFinished(){
-        Sleep(300)
-        BetterClick(320, 400)
+    Sleep(300)
+    BetterClick(320, 400)
 	Sleep(300)
-        Loop 5{
-            BetterClick(100, 100)
-	    Sleep(300)
-        }
-        Sleep(300)
-        BetterClick(310, 122)
+    Loop 5{
+        BetterClick(100, 100)
+    Sleep(300)
+    }
+    Sleep(300)
+    BetterClick(310, 122)
 }
