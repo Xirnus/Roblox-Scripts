@@ -99,7 +99,7 @@ upgUnits(){
             UpdateStats()
             break
         }
-        if (FindText(&X, &Y, 319, 173, 513, 257, 0, 0, defeat)){
+        if (FindText(&X, &Y, 205, 186, 459, 247, 0, 0, defeat)){
             ToolTip("Defeat Screen Found")
                 losses += 1
                 games += 1
