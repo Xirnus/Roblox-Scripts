@@ -21,11 +21,11 @@ unitPlacements(){
     if (checkImage(voteStart)){
         Sleep(1000)
         BetterClick(358, 107)
-        LookDown()
     }
     while True{
         if (!checkImage(voteStart)){
             Sleep(1000)
+            LookDown()
             ToolTip("InGame", 100, 100)
             Sleep(300)
             ToolTip("")
@@ -62,7 +62,7 @@ unitPlacements(){
                     }
                 }
             } 
-            return
+            break
         }
     }
 }
