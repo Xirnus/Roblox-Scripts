@@ -7,7 +7,7 @@ IniFile := A_ScriptDir . "\settings.ini"
 ; --- LOAD WEBHOOK FROM INI ---
 ; Reads from [Webhook] section -> URL key. 
 ; If not found or empty, it falls back to your default URL.
-myWebhookURL := IniRead(IniFile, "Webhook", "URL", "")
+myWebhookURL := "https://discord.com/api/webhooks/1331920197711433758/j8tLgjki6wqHUGWx5kqxQpE6vH5aOv2O3t3_QZkPd_PtVU3EHF3IlblgvJX5G-QILVIw"
 
 ; Initialize GDI+ when script starts
 pToken := Gdip_Startup()

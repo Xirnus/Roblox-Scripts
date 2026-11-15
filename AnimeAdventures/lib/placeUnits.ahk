@@ -3,13 +3,14 @@
 #Include mainfunctions.ahk
 #Include gui.ahk
 #Include patterns.ahk
+#Include webhook.ahk
 
 units := [
-    ["1", "1", "Unit1"],
-    ["2", "3", "Unit2"],
-    ["3", "3", "Unit3"],
-    ["4", "1", "Unit4"],
-    ["5", "1", "Unit5"],
+    ["5", "1", "Unit1"],
+    ["1", "1", "Unit2"],
+    ["2", "3", "Unit3"],
+    ["3", "3", "Unit4"],
+    ["4", "3", "Unit5"],
     ["6", "1", "Unit6"]
 ]
 
@@ -46,7 +47,7 @@ unitPlacements(){
                             startingx := 40
                             startingy -= 70
                         }if (tries >= 60){
-                            return
+                            break
                         }else{
                             BetterClick(startingx, startingy)
                             tries += 1
@@ -71,6 +72,7 @@ upgUnits(){
     global wins, losses, games
     startx := 630
     starty := 130
+    ToolTip("")
     if (checkImage(upgMenu)){
         Send("f")
         Sleep(500)
@@ -80,6 +82,7 @@ upgUnits(){
             wins += 1
             games += 1
             UpdateStats()
+            webhook()
             break
         }
         if (FindText(&X, &Y, 319, 173, 513, 257, 0, 0, defeat)){
@@ -87,6 +90,7 @@ upgUnits(){
             losses += 1
             games += 1
             UpdateStats()
+            webhook()
             break
         }
         if (startx >= 800){
