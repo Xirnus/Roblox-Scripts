@@ -95,7 +95,7 @@ upgUnits(){
             webhook()
             break
         }
-        if (tries > 1200){
+        if (tries > 1600){
             break
         }
         if (startx >= 800){
