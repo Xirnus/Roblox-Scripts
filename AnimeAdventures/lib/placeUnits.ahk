@@ -11,7 +11,7 @@ units := [
     ["2", "3", "Unit3"],
     ["1", "1", "Unit4"],
     ["4", "1", "Unit5"],
-    ["5", "1", "Unit6"]
+    ["5", "4", "Unit6"]
 ]
 
 unitPlacements(){
@@ -95,9 +95,9 @@ upgUnits(){
             webhook()
             break
         }
-        if (tries > 1600){
-            break
-        }
+        ;if (tries > 1600){
+        ;    break
+        ;}
         if (startx >= 800){
             starty += 87
             startx := 630
