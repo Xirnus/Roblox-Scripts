@@ -39,7 +39,9 @@ MoveGui(){
 startGameplay(){
     while True{
         goToEvent()
-        findMatch()
+        if findMatch() {
+            continue  ; restarts loop, calling goToEvent() again
+        }
         unitPlacements()
         upgUnits()
         runFinished()

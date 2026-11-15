@@ -29,6 +29,7 @@ F9:: {
     if (!isScriptRunning) {
         isScriptRunning := True
         ToolTip("Macro Started")
+        WinActivate(RobloxWindow)
         SetTimer(() => ToolTip(), -1000)
         startGameplay()
     }
