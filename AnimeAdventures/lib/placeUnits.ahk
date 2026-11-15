@@ -21,52 +21,49 @@ unitPlacements(){
     if (checkImage(voteStart)){
         Sleep(1000)
         BetterClick(358, 107)
-        Sleep(50000)
-        ToolTip("InGame", 100, 100)
-        Sleep(300)
-        ToolTip("")
         LookDown()
-        Sleep(300)
-        startingx := 40
-        startingy := 480
-        tries := 0
-        for unit in units{
-            unitHotkey := unit[1]
-            unitNumberPlacements :=unit[2]
-            unitNumber := unit[3]
-            loop unitNumberPlacements{
-                while true{
-                    Send(unitHotkey)
-                    Sleep(300)
-		    ToolTip("Tries " . tries)
-                    if (startingx >= 800  || startingy >= 600){
-                        startingx := 40
-                        startingy -= 70
-                    }if (tries >= 50){
-                        break
-                    }else{
-                        BetterClick(startingx, startingy)
-                        tries += 1
-                        Sleep(1000)
-                        if (unitPlaceCheck()){
-                            startingx += 50
-                            ToolTip("Unit placed", 100, 100)
+    }
+    while True{
+        if (!checkImage(voteStart)){
+            Sleep(1000)
+            ToolTip("InGame", 100, 100)
+            Sleep(300)
+            ToolTip("")
+            Sleep(300)
+            startingx := 40
+            startingy := 480
+            tries := 0
+            for unit in units{
+                unitHotkey := unit[1]
+                unitNumberPlacements :=unit[2]
+                unitNumber := unit[3]
+                loop unitNumberPlacements{
+                    while true{
+                        Send(unitHotkey)
+                        Sleep(300)
+                        ToolTip("Tries " . tries)
+                        if (startingx >= 800  || startingy >= 600){
+                            startingx := 40
+                            startingy -= 70
+                        }if (tries >= 50){
                             break
+                        }else{
+                            BetterClick(startingx, startingy)
+                            tries += 1
+                            Sleep(1000)
+                            if (checkImage(unitplaced, 230, 253, 291, 297)){
+                                startingx += 50
+                                ToolTip("Unit placed", 100, 100)
+                                break
+                            }
+                            startingx += 50
+                            Sleep(100)
                         }
-                        startingx += 50
-                        Sleep(100)
                     }
                 }
             }
         }
     }
-}
-
-unitPlaceCheck(){
-    if (FindText(&X, &Y, 230, 253, 291, 297, 0, 0, unitplaced)) {
-        return true
-    }
-    return false
 }
 
 upgUnits(){
