@@ -19,6 +19,7 @@ unitPlacements(){
         Sleep(500)
     }
     if (checkImage(voteStart)){
+        Sleep(1000)
         BetterClick(358, 107)
         Sleep(50000)
         ToolTip("InGame", 100, 100)
