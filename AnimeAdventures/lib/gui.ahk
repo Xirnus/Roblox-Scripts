@@ -1,6 +1,7 @@
 #Requires AutoHotkey v2.0
 
 #Include navigation.ahk
+#Include placeUnits.ahk
 
 global wins := 0
 global losses := 0

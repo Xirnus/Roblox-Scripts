@@ -14,7 +14,7 @@ BetterClick(x, y) {
 }
 
 checkImage(pattern) {
-    if (FindText(&X, &Y, 0, 0, 809, 627, 0, 10, pattern)) {
+    if (FindText(&X, &Y, 0, 0, 809, 627, 10, 10, pattern)) {
         return true
     }
     return false

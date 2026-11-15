@@ -2,6 +2,7 @@
 
 #Include mainfunctions.ahk
 #Include gui.ahk
+#Include gui.ahk
 
 units := [
     ["1", "1", "Unit1"],
@@ -68,6 +69,7 @@ unitPlaceCheck(){
 }
 
 upgUnits(){
+    global wins, losses, games
     startx := 630
     starty := 130
     if (checkImage(upgMenu)){
