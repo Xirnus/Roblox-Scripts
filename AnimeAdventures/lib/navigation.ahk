@@ -39,6 +39,8 @@ goToStory(){
     }
     while true{
         Sleep(1000)
+        BetterClick(412, 375)
+        Sleep(300)
         BetterClick(767, 475)
         Sleep(300)
         BetterClick(492, 333)
