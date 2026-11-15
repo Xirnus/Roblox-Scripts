@@ -48,7 +48,7 @@ goToStory(){
         Send("{d up}")
         Sleep(500)
         Send("{w down}")
-        Sleep(2500)
+        Sleep(3000)
         Send("{w up}")
         ToolTip("")
         BetterClick(785, 326)
