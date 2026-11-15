@@ -49,6 +49,8 @@ findMatch(){
             ToolTip("OCR error:`n" err.Message, 100, 100)
         }
 
+        Sleep(5000)
+
         if (checkImage(lobby)){
             return true ; lobby is still found
         }
