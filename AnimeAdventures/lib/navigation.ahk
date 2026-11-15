@@ -43,7 +43,7 @@ goToStory(){
         Sleep(300)
         BetterClick(492, 333)
         Sleep(300)
-        BetterClick(412, 375)
+        BetterClick(412, 340)
         Sleep(300)
         Send("{d down}")
         Sleep(2000)
