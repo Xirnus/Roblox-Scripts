@@ -2,7 +2,7 @@
 
 #Include mainfunctions.ahk
 #Include gui.ahk
-#Include gui.ahk
+#Include patterns.ahk
 
 units := [
     ["1", "1", "Unit1"],
@@ -45,8 +45,8 @@ unitPlacements(){
                         if (startingx >= 800  || startingy >= 600){
                             startingx := 40
                             startingy -= 70
-                        }if (tries >= 50){
-                            break
+                        }if (tries >= 60){
+                            return
                         }else{
                             BetterClick(startingx, startingy)
                             tries += 1
@@ -83,10 +83,10 @@ upgUnits(){
         }
         if (FindText(&X, &Y, 319, 173, 513, 257, 0, 0, defeat)){
             ToolTip("Defeat Screen Found")
-                losses += 1
-                games += 1
-                UpdateStats()
-                break
+            losses += 1
+            games += 1
+            UpdateStats()
+            break
         }
         if (startx >= 800){
             starty += 87
