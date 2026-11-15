@@ -51,24 +51,6 @@ F8::{
     Reload()
 }
 
-F7::{
-    while true{
-        goToStory()
-        unitPlacements()
-        upgUnits()
-        returnToLobby()
-    }
-}
-
-F6::{
-    goToPortal()
-    while true{
-        unitPlacements()
-        upgUnits()
-        nextPortal()
-    }
-}
-
 F5::{
     Send("{s down}")
     Sleep(500)

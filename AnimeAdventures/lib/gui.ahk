@@ -14,12 +14,14 @@ if !IsSet(MyGui) {
     MyGui.SetFont("s10", "Segoe UI")
 
     MyGui.Add("Text", "x15 y20 w320 vWinText Center", "F9: Start / Pause / Resume | F8: Reload | ESC: Stop")
-    MyGui.Add("Text", "x15 y40 w320 vControlsText Center", "F9: Event | F7: Shibuya Inf | F6: Portal")
 
+    MyGui.Add("Text", "x15 y+20 w150 Center", "Select Game Mode:")
+    modeDDL := MyGui.Add("DropDownList", "x15 y+5 w150 vMode Choose1", ["Event", "Inf Story", "Portal"])
 
-    ; Sleep Input (Positioned right below Game Mode selection)
-    StatsText := MyGui.Add("Text", "x15 y+200 w200", "Wins: 0 | Loss: 0 | Games: 0")
+    MyGui.Add("Text", "x15 y+5 w100", "Portal Name:")
+    MyGui.Add("Edit", "x15 y+5 w100 vPortalName", "")
 
+    StatsText := MyGui.Add("Text", "x15 y+100 w200", "Wins: 0 | Loss: 0 | Games: 0")
 }
 
 UpdateStats() {
@@ -39,6 +41,19 @@ MoveGui(){
 }
 
 startGameplay(){
+    selectedMode := MyGui["Mode"].Text
+
+    Switch selectedMode {
+        Case "Event":
+            EventGameplay()
+        Case "Inf Story":
+            InfGameplay()
+        Case "Portal":
+            PortalGameplay()
+    }
+}
+
+EventGameplay(){
     while True{
         goToEvent()
         if findMatch() {
@@ -47,5 +62,23 @@ startGameplay(){
         unitPlacements()
         upgUnits()
         runFinished()
+    }
+}
+
+PortalGameplay(){
+    goToPortal()
+    while true{
+        unitPlacements()
+        upgUnits()
+        nextPortal()
+    }
+}
+
+InfGameplay(){
+    while true{
+        goToStory()
+        unitPlacements()
+        upgUnits()
+        returnToLobby()
     }
 }

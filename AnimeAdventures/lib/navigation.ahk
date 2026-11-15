@@ -72,37 +72,42 @@ goToStory(){
 }
 
 goToPortal(){
+    portalName := MyGui["PortalName"].Value
     BetterClick(40, 300)
-    Sleep(300)
+    Sleep(500)
     BetterClick(530, 230)
-    Sleep(300)
+    Sleep(500)
     BetterClick(513, 183)
-    Sleep(300)
-    Send("Shib")
+    Sleep(500)
+    Send(portalName)
+    Sleep(500)
     BetterClick(217, 288)
-    Sleep(300)
+    Sleep(500)
     BetterClick(325, 377)
-    Sleep(300)
+    Sleep(500)
     BetterClick(250, 355)
-    Sleep(300)
+    Sleep(500)
     BetterClick(408, 470)
-    Sleep(300)
+    Sleep(500)
 }
 
 nextPortal(){
+    portalName := MyGui["PortalName"].Value
     BetterClick(323, 399)
     Loop 5{
         BetterClick(100,100)
     }
-    Sleep(300)
+    Sleep(500)
     Send("f")
-    Sleep(300)
+    Sleep(500)
     BetterClick(486, 121)
-    Sleep(300)
+    Sleep(500)
     BetterClick(470, 186)
-    Send("Shib")
+    Sleep(500)
+    Send(portalName)
+    Sleep(500)
     BetterClick(217, 288)
-    Sleep(300)
+    Sleep(500)
     BetterClick(325, 409)
 }
 findMatch(){
