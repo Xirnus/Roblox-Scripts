@@ -38,12 +38,12 @@ goToStory(){
         Sleep(500)
     }
     while true{
-        Sleep(1000)
-        BetterClick(412, 375)
-        Sleep(300)
+        Sleep(5000)
         BetterClick(767, 475)
         Sleep(300)
         BetterClick(492, 333)
+        Sleep(300)
+        BetterClick(412, 375)
         Sleep(300)
         Send("{d down}")
         Sleep(2000)
