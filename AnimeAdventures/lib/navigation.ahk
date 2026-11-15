@@ -94,6 +94,9 @@ nextPortal(){
     Loop 5{
         BetterClick(100,100)
     }
+    Sleep(300)
+    Send("f")
+    Sleep(300)
     BetterClick(486, 121)
     Sleep(300)
     BetterClick(470, 186)

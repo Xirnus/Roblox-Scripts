@@ -13,11 +13,13 @@ if !IsSet(MyGui) {
     MyGui.Title := "Anime Adventures Macro"
     MyGui.SetFont("s10", "Segoe UI")
 
+    MyGui.Add("Text", "x15 y20 w320 vWinText Center", "F9: Start / Pause / Resume | F8: Reload | ESC: Stop")
+    MyGui.Add("Text", "x15 y40 w320 vControlsText Center", "F9: Event | F7: Shibuya Inf | F6: Portal")
+
+
     ; Sleep Input (Positioned right below Game Mode selection)
-    StatsText := MyGui.Add("Text", "x15 y+20 w200", "Wins: 0 | Loss: 0 | Games: 0")
-    
-    ; --- BOTTOM SECTION ---
-    MyGui.Add("Text", "x15 y200 w320 vWinText Center", "F9: Start / Pause / Resume | F8: Reload | ESC: Stop")
+    StatsText := MyGui.Add("Text", "x15 y+200 w200", "Wins: 0 | Loss: 0 | Games: 0")
+
 }
 
 UpdateStats() {
