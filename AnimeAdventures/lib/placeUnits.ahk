@@ -21,11 +21,11 @@ unitPlacements(){
     if (checkImage(voteStart)){
         Sleep(1000)
         BetterClick(358, 107)
-        LookDown()
     }
     while True{
         if (!checkImage(voteStart)){
             Sleep(1000)
+            LookDown()
             ToolTip("InGame", 100, 100)
             Sleep(300)
             ToolTip("")
@@ -74,6 +74,20 @@ upgUnits(){
         Send("f")
         Sleep(500)
     While true{
+        if (FindText(&X, &Y, 437, 184, 501, 249, 0, 0, victory)){
+            ToolTip("Victory Screen Found")
+            wins += 1
+            games += 1
+            UpdateStats()
+            break
+        }
+        if (FindText(&X, &Y, 319, 173, 513, 257, 0, 0, defeat)){
+            ToolTip("Defeat Screen Found")
+                losses += 1
+                games += 1
+                UpdateStats()
+                break
+        }
         if (startx >= 800){
             starty += 87
             startx := 630
@@ -89,20 +103,6 @@ upgUnits(){
         }
         BetterClick(100,100)
         Sleep(100)
-        if (FindText(&X, &Y, 437, 184, 501, 249, 0, 0, victory)){
-            ToolTip("Victory Screen Found")
-            wins += 1
-            games += 1
-            UpdateStats()
-            break
-        }
-        if (FindText(&X, &Y, 319, 173, 513, 257, 0, 0, defeat)){
-            ToolTip("Defeat Screen Found")
-                losses += 1
-                games += 1
-                UpdateStats()
-                break
-            }
         }
     }
 }
