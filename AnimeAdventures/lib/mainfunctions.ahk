@@ -1,6 +1,7 @@
 #Include FindText.ahk
 
 #Include patterns.ahk
+#Include Gdip_All.ahk
 
 global wheeldownCount := 15
 
@@ -13,11 +14,8 @@ BetterClick(x, y) {
     Sleep(50)
 }
 
-checkImage(pattern) {
-    if (FindText(&X, &Y, 0, 0, 809, 627, 10, 10, pattern)) {
-        return true
-    }
-    return false
+checkImage(pattern, imagex := 0, imagey := 0, width := 809, height := 627) {
+    return FindText(&X, &Y, imagex, imagey, width, height, 0, 0, pattern) != 0
 }
 
 LookDown(){
