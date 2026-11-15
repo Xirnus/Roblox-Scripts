@@ -6,12 +6,12 @@
 #Include webhook.ahk
 
 units := [
-    ["5", "1", "Unit1"],
-    ["1", "1", "Unit2"],
+    ["6", "1", "Unit1"],
+    ["3", "1", "Unit2"],
     ["2", "3", "Unit3"],
-    ["3", "3", "Unit4"],
-    ["4", "3", "Unit5"],
-    ["6", "1", "Unit6"]
+    ["1", "1", "Unit4"],
+    ["4", "1", "Unit5"],
+    ["5", "1", "Unit6"]
 ]
 
 unitPlacements(){
@@ -72,11 +72,13 @@ upgUnits(){
     global wins, losses, games
     startx := 630
     starty := 130
+    tries := 0
     ToolTip("")
     if (checkImage(upgMenu)){
         Send("f")
         Sleep(500)
     While true{
+        ToolTip("Tries: " . tries)
         if (FindText(&X, &Y, 437, 184, 501, 249, 0, 0, victory)){
             ToolTip("Victory Screen Found")
             wins += 1
@@ -91,6 +93,9 @@ upgUnits(){
             games += 1
             UpdateStats()
             webhook()
+            break
+        }
+        if (tries > 400){
             break
         }
         if (startx >= 800){
@@ -108,18 +113,7 @@ upgUnits(){
         }
         BetterClick(100,100)
         Sleep(100)
+        tries += 1
         }
     }
-}
-
-runFinished(){
-    Sleep(300)
-    BetterClick(320, 400)
-	Sleep(300)
-    Loop 5{
-        BetterClick(100, 100)
-    Sleep(300)
-    }
-    Sleep(300)
-    BetterClick(310, 122)
 }

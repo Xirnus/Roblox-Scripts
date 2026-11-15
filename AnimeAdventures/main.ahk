@@ -52,12 +52,21 @@ F8::{
 }
 
 F7::{
-    upgUnits()
-runFinished()
+    while true{
+        goToStory()
+        unitPlacements()
+        upgUnits()
+        returnToLobby()
+    }
 }
 
 F6::{
-    runFinished()
+    goToPortal()
+    while true{
+        unitPlacements()
+        upgUnits()
+        nextPortal()
+    }
 }
 
 F5::{
