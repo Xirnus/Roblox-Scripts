@@ -46,7 +46,7 @@ unitPlacements(){
                         if (startingx >= 800  || startingy >= 600){
                             startingx := 40
                             startingy -= 70
-                        }if (tries >= 100){
+                        }if (tries >= 115){
                             break
                         }else{
                             BetterClick(startingx, startingy)
