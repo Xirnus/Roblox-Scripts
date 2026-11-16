@@ -138,15 +138,24 @@ findMatch(){
 }
 
 runFinished(){
-    Sleep(300)
-    BetterClick(320, 400)
-	Sleep(300)
-    Loop 5{
-        BetterClick(100, 100)
-    Sleep(300)
+    while true{
+        Sleep(300)
+        BetterClick(320, 400)
+        Sleep(300)
+        Loop 5{
+            BetterClick(100, 100)
+        Sleep(300)
+        }
+        Sleep(300)
+        BetterClick(310, 122)
+
+        Sleep(10000)
+
+        if (!checkImage(lobby)){
+            return true ; lobby not found, retry
+        }
+        return false ; lobby found, restart loop
     }
-    Sleep(300)
-    BetterClick(310, 122)
 }
 
 returnToLobby(){

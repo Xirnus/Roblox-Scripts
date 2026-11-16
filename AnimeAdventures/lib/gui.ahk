@@ -61,7 +61,9 @@ EventGameplay(){
         }
         unitPlacements()
         upgUnits()
-        runFinished()
+        if runFinished(){
+            continue
+        }
     }
 }
 
