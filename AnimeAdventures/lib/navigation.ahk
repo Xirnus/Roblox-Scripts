@@ -113,7 +113,7 @@ nextPortal(){
 findMatch(){
     while true{
         BetterClick(467, 323)
-        Sleep(300)
+        Sleep(800)
         try {
             text := OCR(237, 290, 341, 49)
             text := RegExReplace(String(text), "[^0-9]")
