@@ -51,6 +51,10 @@ F8::{
     Reload()
 }
 
+F6::{
+upgUnits()
+}
+
 F5::{
     Send("{s down}")
     Sleep(500)
