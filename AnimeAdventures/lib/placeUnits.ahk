@@ -10,7 +10,7 @@ units := [
     ["1", "1", "Unit2"],
     ["3", "3", "Unit3"],
     ["4", "4", "Unit4"],
-    ["5", "3", "Unit5"],
+    ["5", "2", "Unit5"],
     ["2", "1", "Unit6"]
 ]
 
@@ -46,7 +46,7 @@ unitPlacements(){
                         if (startingx >= 800  || startingy >= 600){
                             startingx := 40
                             startingy -= 70
-                        }if (tries >= 60){
+                        }if (tries >= 100){
                             break
                         }else{
                             BetterClick(startingx, startingy)
