@@ -6,7 +6,7 @@
 
 goToEvent(){
     ToolTip("Waiting for lobby...")
-    while !checkImage(lobby){
+    while !checkImage(lobby, 736, 166, 788, 220){
         ToolTip("Lobby Not found", 100, 100)
         Sleep(500)
     }
@@ -33,7 +33,7 @@ goToEvent(){
 
 goToStory(){
     ToolTip("Waiting for lobby...")
-    while !checkImage(lobby){
+    while !checkImage(lobby, 736, 166, 788, 220){
         ToolTip("Lobby Not found", 100, 100)
         Sleep(500)
     }
@@ -130,7 +130,7 @@ findMatch(){
 
         Sleep(20000)
 
-        if (checkImage(lobby)){
+        if (checkImage(lobby, 736, 166, 788, 220)){
             return true ; lobby is still found
         }
         return false ; left lobby
@@ -151,7 +151,7 @@ runFinished(){
 
         Sleep(10000)
 
-        if (!checkImage(lobby)){
+        if (!checkImage(lobby, 736, 166, 788, 220)){
             return true ; lobby not found, retry
         }
         return false ; lobby found, restart loop
